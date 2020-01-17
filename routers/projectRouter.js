@@ -42,14 +42,14 @@ router.post('/', validateProjectData, (req, res) => {
 // TODO: Delete associated actions at the same time?
 router.delete('/:id', validateProjectId, (req, res) => {
   projects.remove(req.params.id)
-    .then(() => res.status(200))
+    .then(() => res.status(200).end())
     .catch(err => console.log(err));
 });
 
 // Modify: Check user id to replace. Ensure replacement info is valid.
 router.put('/:id', validateProjectId, validateProjectData, (req, res) => {
   const projectinfo = req.body;
-  users.update(req.params.id, projectinfo)
+  projects.update(req.params.id, projectinfo)
     .then(() => res.status(200).json(projectinfo))
     .catch(err => console.log(err));
 });

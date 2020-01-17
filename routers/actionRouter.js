@@ -1,6 +1,6 @@
 const express = require('express');
 const actions = require('../data/helpers/actionModel');
-const projects = require('../data/helpers/projectModel'); // TODO: for middleware
+const projects = require('../data/helpers/projectModel'); // For middleware
 
 const router = express.Router();
 
@@ -35,7 +35,7 @@ router.get('/:id', validateActionId, (req, res) => {
 router.post('/', validateProjectExists, validateActionData, (req, res) => {
   const actioninfo = req.body;
   actions.insert(actioninfo)
-    .then(() => res.status(201))
+    .then(() => res.status(201).end()) // Alt method: res.send.status(201)
     .catch(err => console.log(err));
 });
 
@@ -44,8 +44,11 @@ router.post('/', validateProjectExists, validateActionData, (req, res) => {
 // Delete Action: Make sure action exists before deleting.
 router.delete('/:id', validateActionId, (req, res) => {
   actions.remove(req.params.id)
-    .then(() => res.status(200))
-    .catch(err => console.log(err));
+    .then(() => res.status(200).end())
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({message: "Internal server error."})
+    });
 });
 
 // Modify: Check action id to replace. Ensure replacement info is valid.
